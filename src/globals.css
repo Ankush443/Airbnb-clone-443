@@ -1,0 +1,305 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Airbnb Cereal VF";
+  src: url("/assets/fonts/AirbnbCerealVF.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@theme {
+  --font-sans: "Airbnb Cereal VF", "Airbnb Cereal", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --color-rausch: #ff385c;
+  --color-rausch-dark: #e00b41;
+  --color-bookly: #ff5a5f;
+  --color-ink: #222222;
+  --color-gray-70: #717171;
+  --color-gray-80: #6a6a6a;
+  --color-gray-90: #5e5e5e;
+  --color-muted: #b0b0b0;
+  --color-line: #dddddd;
+  --color-line-light: #ebebeb;
+  --color-page: #f7f7f7;
+  --color-jade: #008a05;
+
+  --ease-airbnb: cubic-bezier(0.2, 0, 0, 1);
+  --ease-hero-zoom: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background: #fff;
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  *,
+  ::before,
+  ::after {
+    box-sizing: border-box;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  button {
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  p {
+    margin: 0;
+  }
+
+  input {
+    font-family: inherit;
+  }
+}
+
+@layer utilities {
+  .kbd-focus {
+    outline: none;
+  }
+  .text-title {
+    font-size: 26px;
+    line-height: 30px;
+  }
+  .text-section {
+    font-size: 22px;
+    line-height: 26px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+html.kbd a:focus-visible,
+html.kbd button:focus-visible,
+html.kbd input:focus-visible {
+  outline: 3px solid var(--color-ink);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+:root {
+  --overlay-duration: 0.3s;
+  --overlay-ease: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* ------------------------------ Photo Tour overlay ------------------------------ */
+
+.photo-tour {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.photo-tour[data-state="open"] {
+  animation: pt-slide-up var(--overlay-duration) var(--overlay-ease) both;
+}
+
+.photo-tour[data-state="close"] {
+  animation: pt-slide-down var(--overlay-duration) var(--overlay-ease) both;
+}
+
+@keyframes pt-slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes pt-slide-down {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+/* ------------------------------ Lightbox ------------------------------ */
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+}
+
+.lightbox-figure {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-photo {
+  max-width: 92vw;
+  max-height: 82vh;
+  object-fit: contain;
+  animation: lb-fade-in 0.18s ease-out both;
+}
+
+@keyframes lb-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ------------------------------ Nav slide ------------------------------ */
+
+.subnav-stuck {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #fff;
+  border-bottom: 1px solid var(--color-line-light);
+  animation: nav-slide-down 0.3s var(--overlay-ease) both;
+}
+
+@keyframes nav-slide-down {
+  from {
+    transform: translateY(-8px);
+    opacity: 0.4;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ------------------------------ Section reveal ------------------------------ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s var(--ease-airbnb), transform 0.5s var(--ease-airbnb);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ------------------------------ Hero hover zoom ------------------------------ */
+
+.hero-zoom {
+  overflow: hidden;
+}
+
+.hero-zoom img,
+.hero-zoom .hero-img {
+  transition: transform 0.35s var(--ease-hero-zoom);
+  will-change: transform;
+}
+
+.hero-zoom:hover img,
+.hero-zoom:hover .hero-img {
+  transform: scale(1.05);
+}
+
+/* ------------------------------ Booking pulse (hover) ------------------------------ */
+
+.btn-primary {
+  background: linear-gradient(
+    to right,
+    #e61e4d 0%,
+    #e31c5f 50%,
+    #d70466 100%
+  );
+  color: #fff;
+  transition: background 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(
+    to right,
+    #e61e4d 0%,
+    #e31c5f 50%,
+    #d70466 100%
+  );
+  filter: brightness(0.94);
+}
+
+/* Hide scrollbars for filmstrips */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+/* Description clamp fade */
+.mask-fade {
+  -webkit-mask-image: linear-gradient(#000 70%, transparent);
+  mask-image: linear-gradient(#000 70%, transparent);
+}
+
+/* Calendar selected-range bridge */
+.cal-edge::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  background: var(--color-line-light);
+  z-index: -1;
+}
+.cal-edge {
+  isolation: isolate;
+}
+
+/* Struck-through amenity label */
+.struck {
+  text-decoration: line-through;
+  opacity: 0.55;
+}
+
+/* Override Tailwind's generated -scale-x-100 to use a positive scale (no mirroring). */
+.-scale-x-100 {
+  --tw-scale-x: calc(100% * 1);
+  scale: var(--tw-scale-x) var(--tw-scale-y);
+}
